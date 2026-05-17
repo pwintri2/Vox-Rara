@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="nl" translate="no" class="notranslate">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ledentoegangbeheer | Wintrip</title>
+
+  <link rel="stylesheet" href="../assets/style.css?v=4">
+  <link rel="stylesheet" href="leden.css?v=4">
+  <script defer src="leden.js?v=4"></script>
+</head>
+<body class="kanban-style" data-page="toegang">
+  <header class="topbar">
+    <img src="../assets/logo.png" class="logo" alt="Wintrip logo">
+    <div class="titleWrap">
+      <div class="title">Ledentoegangbeheer</div>
+      <div class="subtitle">Wie mag wat zien in de ledenmodule?</div>
+    </div>
+
+    <nav class="menu">
+      <a class="menuBtn ghost" href="https://philip-wintrip.nl/dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="loginbar" id="loginbar">
+    <input id="pw" type="password" placeholder="Admin wachtwoord" onkeydown="if(event.key === 'Enter') document.getElementById('loginBtn').click();">
+    <button id="loginBtn" class="btn primary">Inloggen</button>
+    <span id="loginMsg" style="color:#ff5252; font-size:14px; margin-left:10px;"></span>
+  </div>
+
+  <main class="container">
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="cardTitle">Toegang toevoegen / wijzigen</div>
+
+      <label>Label (bijv. “Koorlid Jan” of "Speciale Rol")</label>
+      <input id="label" type="text" placeholder="Bijv. Koorlid Jan">
+
+      <label>Unieke Toegangscode</label>
+      <input id="code" type="text" placeholder="Bijv. secret-pass-123">
+
+      <label style="display:flex; gap:10px; align-items:center; cursor: pointer; user-select: none;">
+        <input id="leden_view" type="checkbox" checked>
+        <b>Ledenpagina bekijken</b> (Mag inloggen op leden.html)
+      </label>
+
+      <label style="display:flex; gap:10px; align-items:center; cursor: pointer; user-select: none;">
+        <input id="leden_manage" type="checkbox">
+        <b>Leden beheren</b> (Mag inloggen op ledenbeheer.html)
+      </label>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button id="saveBtn" class="btn primary">Opslaan</button>
+      </div>
+    </div>
+
+    <section>
+      <div class="panelTitle">Actieve Toegangscodes</div>
+      <div class="voiceGrid" id="wrap"></div>
+    </section>
+  </main>
+</body>
+</html>

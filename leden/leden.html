@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="nl" translate="no" class="notranslate">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Leden | Wintrip</title>
+
+  <!-- Base styling niet verwijderen wegens fonts en resets -->
+  <link rel="stylesheet" href="../assets/style.css?v=4">
+  <link rel="stylesheet" href="leden.css?v=4">
+  
+  <script defer src="leden.js?v=4"></script>
+</head>
+<body class="kanban-style" data-page="leden">
+  <header class="topbar">
+    <img src="../assets/logo.png" class="logo" alt="Wintrip logo">
+    <div class="titleWrap">
+      <div class="title">Leden</div>
+      <div class="subtitle">Vox Rara</div>
+    </div>
+
+    <nav class="menu">
+      <a class="menuBtn ghost" href="https://philip-wintrip.nl/dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="loginbar" id="loginbar">
+    <input id="pw" type="password" placeholder="Toegangscode" onkeydown="if(event.key === 'Enter') document.getElementById('loginBtn').click();">
+    <button id="loginBtn" class="btn primary">Inloggen</button>
+    <span id="loginMsg" style="color:#ff5252; font-size:14px; margin-left:10px;"></span>
+  </div>
+
+  <main class="container">
+    <div class="voiceGrid">
+      <section>
+        <div class="voiceTitle">Sopraan</div>
+        <div class="tileGrid" id="Sopraan"></div>
+      </section>
+
+      <section>
+        <div class="voiceTitle">Alt</div>
+        <div class="tileGrid" id="Alt"></div>
+      </section>
+
+      <section>
+        <div class="voiceTitle">Tenor</div>
+        <div class="tileGrid" id="Tenor"></div>
+      </section>
+
+      <section>
+        <div class="voiceTitle">Bas</div>
+        <div class="tileGrid" id="Bas"></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

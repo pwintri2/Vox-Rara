@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Vox-Rara Stage Aanmelding</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+background:
+radial-gradient(circle at 20% 20%,rgba(255,230,180,0.25),transparent 40%),
+radial-gradient(circle at 80% 30%,rgba(255,240,210,0.2),transparent 40%),
+linear-gradient(180deg,#f7f4ef,#efe7db);
+min-height:100vh;
+color:#2d2d2d;
+overflow-x:hidden;
+}
+
+/* floating notes */
+
+.notes{
+position:fixed;
+pointer-events:none;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+z-index:0;
+}
+
+.note{
+position:absolute;
+font-size:22px;
+opacity:.15;
+animation:floatNote linear infinite;
+}
+
+@keyframes floatNote{
+0%{transform:translateY(100vh) rotate(0deg)}
+100%{transform:translateY(-10vh) rotate(360deg)}
+}
+
+.topbar{
+display:flex;
+align-items:center;
+gap:14px;
+padding:20px 28px;
+background:rgba(255,255,255,0.65);
+backdrop-filter:blur(12px);
+border-bottom:1px solid rgba(0,0,0,0.05);
+position:relative;
+z-index:2;
+}
+
+.logo{height:44px}
+
+.container{
+max-width:720px;
+margin:70px auto;
+padding:20px;
+position:relative;
+z-index:2;
+}
+
+.card{
+position:relative;
+background:rgba(255,255,255,0.65);
+backdrop-filter:blur(18px);
+border-radius:18px;
+padding:40px;
+box-shadow:
+0 25px 60px rgba(0,0,0,0.15),
+inset 0 1px rgba(255,255,255,0.6);
+overflow:hidden;
+}
+
+.card::before{
+content:"";
+position:absolute;
+top:-200%;
+left:-50%;
+width:200%;
+height:400%;
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,0.35),
+transparent
+);
+animation:shine 8s infinite;
+}
+
+@keyframes shine{
+0%{transform:translateX(-60%)}
+100%{transform:translateX(60%)}
+}
+
+.title{
+font-size:28px;
+font-weight:600;
+}
+
+.subtitle{
+color:#666;
+margin-bottom:18px;
+}
+
+.greeting{
+color:#b89255;
+margin-bottom:15px;
+}
+
+.progress{
+height:6px;
+background:#eee;
+border-radius:6px;
+margin-bottom:30px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:33%;
+background:#c8a96a;
+transition:.3s;
+}
+
+.step{display:none}
+.step.active{display:block}
+
+label{
+display:block;
+margin-top:18px;
+font-weight:600;
+font-size:14px;
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ddd;
+margin-top:6px;
+background:#fafafa;
+font-size:14px;
+}
+
+input:focus,textarea:focus{
+outline:none;
+border-color:#c8a96a;
+background:white;
+}
+
+.upload{
+border:2px dashed #d6c8a5;
+border-radius:10px;
+padding:24px;
+text-align:center;
+margin-top:8px;
+background:rgba(255,248,230,0.4);
+cursor:pointer;
+}
+
+.upload.drag{
+background:#f4ecd7;
+}
+
+.preview{
+max-width:140px;
+border-radius:10px;
+margin-top:12px;
+display:none;
+}
+
+.buttons{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+
+.next{background:#c8a96a;color:white}
+.back{background:#eee}
+
+.success{
+display:none;
+text-align:center;
+padding:40px 10px;
+}
+
+.check{
+font-size:70px;
+color:#c8a96a;
+}
+
+.concierge{
+position:fixed;
+bottom:20px;
+left:20px;
+background:white;
+padding:14px 18px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+font-size:14px;
+max-width:220px;
+z-index:3;
+}
+
+.musicBtn{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#c8a96a;
+color:white;
+border:none;
+border-radius:50%;
+width:46px;
+height:46px;
+cursor:pointer;
+font-size:18px;
+z-index:3;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="notes" id="notes"></div>
+
+<header class="topbar">
+<img src="logo.png" class="logo">
+<div>
+<b>Vox-Rara</b><br>
+<small>Stage aanmelding</small>
+</div>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<div class="title">Welkom</div>
+<div class="subtitle">Neem gerust plaats in de lobby 🙂</div>
+
+<div class="greeting" id="greeting"></div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<form id="form"
+action="https://formsubmit.co/info@wintrip.nl"
+method="POST"
+enctype="multipart/form-data">
+
+<input type="hidden" name="_captcha" value="false">
+
+<!-- STEP 1 -->
+
+<div class="step active">
+
+<label>Naam</label>
+<input name="naam" id="naam" required>
+
+<label>E-mail</label>
+<input name="email" type="email" required>
+
+<div class="buttons">
+<div></div>
+<button type="button" class="next" onclick="next()">Volgende</button>
+</div>
+
+</div>
+
+<!-- STEP 2 -->
+
+<div class="step">
+
+<label>Vertel iets over jezelf</label>
+<textarea name="over" rows="5"></textarea>
+
+<label>Wat zou je graag willen leren?</label>
+<textarea name="leren" rows="4"></textarea>
+
+<div class="buttons">
+<button type="button" class="back" onclick="back()">Terug</button>
+<button type="button" class="next" onclick="next()">Volgende</button>
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+
+<div class="step">
+
+<label>Foto</label>
+
+<div class="upload" id="fotoDrop">
+Sleep foto hier of klik
+<input type="file" id="fotoInput" name="foto" accept="image/*" hidden>
+</div>
+
+<img id="preview" class="preview">
+
+<label>CV</label>
+
+<div class="upload" id="cvDrop">
+Sleep CV hier of klik
+<input type="file" id="cvInput" name="cv" accept=".pdf,.doc,.docx" hidden>
+</div>
+
+<div id="cvName" style="margin-top:8px;color:#666;font-size:14px;"></div>
+
+<div class="buttons">
+<button type="button" class="back" onclick="back()">Terug</button>
+<button class="next" type="submit">Verzenden</button>
+</div>
+
+</div>
+
+</form>
+
+<div class="success" id="success">
+<div class="check">✓</div>
+<h2 id="thanks">Bedankt!</h2>
+<p>Je aanmelding is ontvangen.</p>
+</div>
+
+</div>
+</div>
+
+<div class="concierge">
+Hoi! Ik ben de Vox-Rara lobby host 👋  
+Je antwoorden worden automatisch opgeslagen.
+</div>
+
+<button class="musicBtn" onclick="toggleMusic()">♪</button>
+
+<script>
+
+/* floating notes */
+
+const notesContainer=document.getElementById("notes")
+
+for(let i=0;i<20;i++){
+const n=document.createElement("div")
+n.className="note"
+n.innerHTML="♪"
+n.style.left=Math.random()*100+"%"
+n.style.animationDuration=(12+Math.random()*20)+"s"
+n.style.fontSize=(18+Math.random()*18)+"px"
+notesContainer.appendChild(n)
+}
+
+/* stappen */
+
+let step=0
+const steps=document.querySelectorAll(".step")
+const bar=document.getElementById("bar")
+
+function show(){
+steps.forEach((s,i)=>s.classList.toggle("active",i===step))
+bar.style.width=(step+1)*33+"%"
+}
+
+function next(){step++;show()}
+function back(){step--;show()}
+
+/* naam begroeting */
+
+const naam=document.getElementById("naam")
+const greeting=document.getElementById("greeting")
+
+naam.addEventListener("input",()=>{
+if(naam.value.length>1)
+greeting.innerText="Welkom "+naam.value+" 👋"
+else
+greeting.innerText=""
+})
+
+/* autosave */
+
+const fields=document.querySelectorAll("input[type=text],input[type=email],textarea")
+
+fields.forEach(field=>{
+
+const saved=localStorage.getItem(field.name)
+if(saved) field.value=saved
+
+field.addEventListener("input",()=>{
+localStorage.setItem(field.name,field.value)
+})
+
+})
+
+/* foto preview */
+
+const fotoInput=document.getElementById("fotoInput")
+const preview=document.getElementById("preview")
+
+fotoInput.onchange=e=>{
+const file=e.target.files[0]
+if(file){
+const reader=new FileReader()
+reader.onload=x=>{
+preview.src=x.target.result
+preview.style.display="block"
+}
+reader.readAsDataURL(file)
+}
+}
+
+/* cv naam */
+
+const cvInput=document.getElementById("cvInput")
+const cvName=document.getElementById("cvName")
+
+cvInput.onchange=e=>{
+const file=e.target.files[0]
+if(file) cvName.innerText="Geselecteerd: "+file.name
+}
+
+/* drag drop */
+
+function setup(zone,input){
+
+zone.onclick=()=>input.click()
+
+zone.ondragover=e=>{
+e.preventDefault()
+zone.classList.add("drag")
+}
+
+zone.ondragleave=()=>zone.classList.remove("drag")
+
+zone.ondrop=e=>{
+e.preventDefault()
+zone.classList.remove("drag")
+input.files=e.dataTransfer.files
+input.dispatchEvent(new Event("change"))
+}
+
+}
+
+setup(document.getElementById("fotoDrop"),fotoInput)
+setup(document.getElementById("cvDrop"),cvInput)
+
+/* submit */
+
+const form=document.getElementById("form")
+
+form.addEventListener("submit",()=>{
+
+localStorage.clear()
+
+setTimeout(()=>{
+
+document.querySelector(".card").style.display="none"
+document.getElementById("success").style.display="block"
+
+const name = naam.value
+document.getElementById("thanks").innerText="Dank je wel "+name+"!"
+
+},800)
+
+})
+
+/* muziek */
+
+let audioCtx
+let choirPlaying=false
+let oscillators=[]
+let mp3
+let mp3Playing=false
+
+function startChoir(){
+
+audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+
+const freqs=[220,277,329,392]
+
+freqs.forEach(freq=>{
+const osc=audioCtx.createOscillator()
+const gain=audioCtx.createGain()
+
+osc.type="sine"
+osc.frequency.value=freq
+
+gain.gain.value=0.02
+
+osc.connect(gain)
+gain.connect(audioCtx.destination)
+
+osc.start()
+
+oscillators.push(osc)
+
+})
+
+choirPlaying=true
+}
+
+function stopChoir(){
+oscillators.forEach(o=>o.stop())
+oscillators=[]
+choirPlaying=false
+}
+
+function toggleMusic(){
+
+if(!mp3){
+mp3 = new Audio("lobby.mp3")
+mp3.loop=true
+}
+
+mp3.play().then(()=>{
+mp3Playing=true
+}).catch(()=>{
+
+if(!choirPlaying){
+startChoir()
+}else{
+stopChoir()
+}
+
+})
+
+if(mp3Playing){
+mp3.pause()
+mp3Playing=false
+}
+
+}
+
+</script>
+
+</body>
+</html>

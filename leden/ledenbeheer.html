@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="nl" translate="no" class="notranslate">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Ledenbeheer | Wintrip</title>
+
+  <link rel="stylesheet" href="../assets/style.css?v=4">
+  <link rel="stylesheet" href="leden.css?v=4">
+  <script defer src="leden.js?v=4"></script>
+</head>
+<body class="kanban-style" data-page="ledenbeheer">
+  <header class="topbar">
+    <img src="../assets/logo.png" class="logo" alt="Wintrip logo">
+    <div class="titleWrap">
+      <div class="title">Ledenbeheer</div>
+      <div class="subtitle">Aanmelders en Actieve Leden</div>
+    </div>
+
+    <nav class="menu">
+      <a class="menuBtn ghost" href="https://philip-wintrip.nl/dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <div class="loginbar" id="loginbar">
+    <input id="pw" type="password" placeholder="Toegangscode of Admin wachtwoord" onkeydown="if(event.key === 'Enter') document.getElementById('loginBtn').click();">
+    <button id="loginBtn" class="btn primary">Inloggen</button>
+    <span id="loginMsg" style="color:#ff5252; font-size:14px; margin-left:10px;"></span>
+  </div>
+
+  <main class="container">
+    <div class="grid2">
+      <section style="background: rgba(100, 181, 246, 0.05); border-color: rgba(100, 181, 246, 0.1);">
+        <div class="panelTitle" style="color: #64b5f6;">Nieuwe Aanmeldingen (Pending)</div>
+        <div class="tileGrid" id="pendingWrap"></div>
+      </section>
+
+      <section>
+        <div class="panelTitle">Goedgekeurde Leden</div>
+        <div class="voiceGrid">
+          <div>
+            <div class="voiceTitle">Sopraan</div>
+            <div class="tileGrid" id="member_Sopraan"></div>
+          </div>
+          <div>
+            <div class="voiceTitle">Alt</div>
+            <div class="tileGrid" id="member_Alt"></div>
+          </div>
+          <div>
+            <div class="voiceTitle">Tenor</div>
+            <div class="tileGrid" id="member_Tenor"></div>
+          </div>
+          <div>
+            <div class="voiceTitle">Bas</div>
+            <div class="tileGrid" id="member_Bas"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

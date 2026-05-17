@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Zorg dat Authorization headers niet gestript worden door Strato FastCGI
+    CGIPassAuth On
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    
+    # Als de request naar /api/ begint, stuur deze dan door naar api.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^api/(.*)$ api.php?endpoint=$1 [QSA,L]
+</IfModule>

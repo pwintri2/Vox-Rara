@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="nl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partituur Oefenaar</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&amp;family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.8.6/build/opensheetmusicdisplay.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/osmd-audio-player/umd/OsmdAudioPlayer.min.js"></script>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    * { box-sizing: border-box; }
+    .font-heading { font-family: 'DM Serif Display', serif; }
+    .font-body { font-family: 'Nunito', sans-serif; }
+
+    .sidebar-item {
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .sidebar-item.active {
+      background: rgba(212, 175, 55, 0.15); /* Subtiele gouden gloed voor actieve items */
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .sidebar-item:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .drop-zone {
+      border: 2px dashed rgba(255,255,255,0.15);
+      transition: all 0.3s ease;
+      background: rgba(0,0,0,0.1);
+    }
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(212, 175, 55, 0.05);
+      transform: scale(1.02);
+    }
+
+    .transport-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .transport-btn:hover {
+      transform: scale(1.1) translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .transport-btn:active {
+      transform: scale(0.95);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    #osmd-container svg { width: 100% !important; }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: 2px solid var(--bg-dark);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s ease forwards; }
+
+    .progress-track {
+      height: 6px;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    :root {
+      --bg-dark: #0f172a;       /* Elegant Midnight Slate */
+      --bg-surface: #1e293b;    /* Zachtere diepe blauw-grijze tint */
+      --text-main: #f8fafc;     /* Helder koor-wit */
+      --text-muted: #94a3b8;    /* Zacht grijs */
+      --accent: #d4af37;        /* Klassiek Bladgoud */
+      --accent-secondary: #38bdf8;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="font-body h-full" style="background: radial-gradient(circle at 50% 0%, var(--bg-surface) 0%, var(--bg-dark) 100%); color: var(--text-main);">
+  <div id="app-wrapper" class="flex h-full w-full">
+   <!-- Sidebar -->
+   <aside id="sidebar" class="flex flex-col w-72 shrink-0 h-full shadow-2xl z-10" style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border-right: 1px solid rgba(255,255,255,0.05);">
+    <header class="p-6 pb-4">
+     <h1 id="app-title" class="font-heading text-2xl tracking-wide" style="color: var(--accent);">Partituur Oefenaar</h1>
+     <p class="text-xs mt-1.5 opacity-60 font-light">Thuis repeteren voor het koor</p>
+    </header>
+    
+    <nav id="library-nav" class="px-4 py-4 border-b flex-1 overflow-auto" style="border-color: rgba(255,255,255,0.05); max-height: 40%;" aria-label="Bibliotheek">
+     <p class="text-xs font-bold uppercase tracking-widest text-slate-400 px-2 mb-3">Bibliotheek</p>
+     <div id="score-list" class="space-y-1">
+       <div class="px-2 text-xs opacity-50">Laden...</div>
+     </div>
+    </nav>
+    
+    <nav id="voice-nav" class="flex-1 overflow-auto px-4 py-4" aria-label="Stemmen">
+     <p class="text-xs font-bold uppercase tracking-widest text-slate-400 px-2 mb-3">Stemmen Isoleren</p>
+     <div id="voice-list" class="space-y-1"></div>
+    </nav>
+    
+    <div class="p-5 border-t" style="border-color: rgba(255,255,255,0.05);">
+     <label for="file-input" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold cursor-pointer transition-all shadow-lg hover:shadow-xl" style="background: var(--accent); color: var(--bg-dark);"> 
+      <i data-lucide="upload-cloud" style="width:18px;height:18px;"></i> <span>Nieuw Nummer Uploaden</span> 
+     </label> 
+     <input type="file" id="file-input" accept=".xml,.musicxml,.mxl" class="hidden">
+    </div>
+   </aside>
+
+   <!-- Main content -->
+   <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+    <!-- Score area -->
+    <div id="score-area" class="flex-1 overflow-auto p-8 relative">
+     <!-- Empty state / drop zone -->
+     <div id="empty-state" class="flex items-center justify-center h-full">
+      <div id="drop-zone" class="drop-zone rounded-3xl p-14 text-center max-w-lg w-full fade-up shadow-2xl">
+       <div class="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6" style="background: rgba(212,175,55,0.15); box-shadow: inset 0 0 20px rgba(212,175,55,0.1);">
+        <i data-lucide="music-4" style="width:36px;height:36px;color:var(--accent);"></i>
+       </div>
+       <h2 class="font-heading text-2xl mb-3">Kies een koorstuk</h2>
+       <p class="text-sm opacity-60 mb-6 font-light">Klik links in de bibliotheek op een nummer, of sleep een nieuw bestand hierheen om het toe te voegen.</p>
+       <p class="text-xs opacity-40 font-mono">Ondersteund: .mxl, .musicxml, .xml</p>
+      </div>
+     </div>
+     
+     <!-- Loading state -->
+     <div id="loading-state" class="hidden flex items-center justify-center h-full">
+      <div class="text-center fade-up">
+       <div class="relative w-20 h-20 mx-auto mb-6">
+        <div class="absolute inset-0 rounded-full" style="border: 3px solid rgba(212,175,55,0.2);"></div>
+        <div class="absolute inset-0 rounded-full" style="border: 3px solid var(--accent); border-top-color: transparent; animation: spin 1s linear infinite;"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+         <i data-lucide="music" style="width:24px;height:24px;color:var(--accent);" class="animate-pulse"></i>
+        </div>
+       </div>
+       <p class="text-lg font-heading opacity-90 tracking-wide">Partituur wordt voorbereid...</p>
+       <p class="text-sm opacity-50 mt-2 font-light">Noten en instrumenten inladen</p>
+      </div>
+     </div>
+
+     <!-- OSMD rendered score -->
+     <div id="osmd-container" class="hidden bg-white rounded-xl shadow-2xl p-6 relative"></div>
+    </div>
+
+    <!-- Transport bar -->
+    <footer id="transport-bar" class="shrink-0 px-8 py-5 border-t relative z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.2)]" style="background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); border-color: rgba(255,255,255,0.05);">
+     <div id="progress-track" class="progress-track mb-5 bg-slate-700/50">
+      <div id="progress-fill" class="progress-fill" style="width: 0%; background: var(--accent);"></div>
+     </div>
+     <div class="flex items-center justify-between gap-4">
+      <!-- Time -->
+      <div class="text-sm tabular-nums opacity-60 w-24 font-medium"><span id="time-current">0:00</span> <span class="opacity-50 mx-1">/</span> <span id="time-total">0:00</span></div>
+      
+      <!-- Transport controls -->
+      <div class="flex items-center gap-4">
+       <button id="btn-restart" class="transport-btn p-2.5 rounded-full opacity-70 hover:opacity-100 hover:bg-white/5" title="Opnieuw starten"> <i data-lucide="skip-back" style="width:20px;height:20px;"></i> </button> 
+       <button id="btn-rewind" class="transport-btn p-2.5 rounded-full opacity-70 hover:opacity-100 hover:bg-white/5" title="Terugspoelen"> <i data-lucide="rewind" style="width:20px;height:20px;"></i> </button> 
+       <button id="btn-play" class="transport-btn p-4 rounded-full shadow-lg" title="Afspelen" style="background: var(--accent); color: var(--bg-dark);"> <i data-lucide="play" style="width:24px;height:24px; fill: currentColor;" id="play-icon"></i> </button> 
+       <button id="btn-forward" class="transport-btn p-2.5 rounded-full opacity-70 hover:opacity-100 hover:bg-white/5" title="Vooruitspoelen"> <i data-lucide="fast-forward" style="width:20px;height:20px;"></i> </button>
+      </div>
+      
+      <!-- Speed & Metronome -->
+      <div class="flex items-center gap-6 justify-end w-48">
+       <div class="flex items-center gap-2" title="Afspeelsnelheid">
+        <i data-lucide="gauge" style="width:16px;height:16px;" class="opacity-50"></i> 
+        <input type="range" id="speed-slider" min="0.5" max="1.5" step="0.05" value="1" class="w-20 bg-slate-700 rounded-full h-1"> 
+        <span id="speed-label" class="text-xs tabular-nums opacity-60 w-8 text-right font-bold">1.0×</span>
+       </div>
+       <div class="h-6 w-px bg-white/10"></div>
+       <button id="btn-metronome" class="transport-btn flex items-center gap-2 p-2 rounded-lg opacity-60 hover:opacity-100 hover:bg-white/5" title="Metronoom"> 
+        <i data-lucide="mic-2" style="width:18px;height:18px;"></i>
+        <span id="metronome-label" class="text-[10px] font-bold tracking-wider">AAN</span>
+       </button>
+      </div>
+     </div>
+    </footer>
+   </main>
+  </div>
+
+  <script>
+    // ── Config ──
+    const defaultConfig = {
+      app_title: 'Partituur Oefenaar',
+      background_color: '#0f172a',
+      surface_color: '#1e293b',
+      text_color: '#f8fafc',
+      accent_color: '#d4af37',
+      accent_secondary_color: '#38bdf8',
+      font_family: 'Nunito',
+      font_size: 14
+    };
+
+    function applyConfig(cfg) {} // Voor SDK integratie (leeg gehouden voor simpelheid, thema is hardcoded via CSS vars)
+
+    // ── State ──
+    let osmd = null;
+    let audioPlayer = null;
+    let voices =[];
+    let activeVoice = 'all';
+    let isPlaying = false;
+    let playbackSpeed = 1.0;
+    let metronomeEnabled = true;
+    let audioContext = null;
+    let audioPlayerInitialized = false;
+
+    // Prachtige stem kleuren
+    const voiceColors =['#d4af37', '#f43f5e', '#14b8a6', '#f59e0b', '#8b5cf6', '#0ea5e9', '#ec4899'];
+
+    // ── DOM refs ──
+    const fileInput = document.getElementById('file-input');
+    const emptyState = document.getElementById('empty-state');
+    const loadingState = document.getElementById('loading-state');
+    const osmdContainer = document.getElementById('osmd-container');
+    const voiceList = document.getElementById('voice-list');
+    const btnPlay = document.getElementById('btn-play');
+    const btnRewind = document.getElementById('btn-rewind');
+    const btnForward = document.getElementById('btn-forward');
+    const btnRestart = document.getElementById('btn-restart');
+    const speedSlider = document.getElementById('speed-slider');
+    const speedLabel = document.getElementById('speed-label');
+    const progressFill = document.getElementById('progress-fill');
+    const progressTrack = document.getElementById('progress-track');
+    const timeCurrent = document.getElementById('time-current');
+    const timeTotal = document.getElementById('time-total');
+    const btnMetronome = document.getElementById('btn-metronome');
+    const metronomeLabel = document.getElementById('metronome-label');
+    const scoreArea = document.getElementById('score-area');
+
+    // ── Backend & Library ──
+    async function fetchScores() {
+      const scoreListEl = document.getElementById('score-list');
+      try {
+        const response = await fetch('api_scores.php?action=list');
+        const data = await response.json();
+        if (data.success) {
+          renderScoreList(data.scores);
+        } else {
+          scoreListEl.innerHTML = `<div class="px-3 text-xs text-red-400">Error: ${data.error}</div>`;
+        }
+      } catch(e) {
+        scoreListEl.innerHTML = `<div class="px-3 text-xs text-red-400 opacity-60">Fout bij verbinden met Strato database</div>`;
+      }
+    }
+
+    function renderScoreList(scores) {
+      const scoreListEl = document.getElementById('score-list');
+      scoreListEl.innerHTML = '';
+      if (scores.length === 0) {
+        scoreListEl.innerHTML = `<div class="px-2 text-xs opacity-50 italic">Nog geen nummers opgeslagen. Upload je eerste koorstuk!</div>`;
+        return;
+      }
+      
+      scores.forEach(score => {
+        const btn = document.createElement('button');
+        btn.className = 'sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left mb-1';
+        btn.innerHTML = `<i data-lucide="file-audio-2" style="width: 16px; height: 16px; opacity: 0.7;"></i> <span class="truncate font-medium">${score.title}</span>`;
+        btn.addEventListener('click', () => {
+          // Visual feedback actieve song
+          document.querySelectorAll('#score-list .sidebar-item').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          loadScoreFromServer(score.title, score.filename);
+        });
+        scoreListEl.appendChild(btn);
+      });
+      lucide.createIcons();
+    }
+
+    async function loadScoreFromServer(title, filename) {
+      emptyState.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+      osmdContainer.classList.add('hidden');
+      stopPlayback();
+      document.getElementById('app-title').textContent = title;
+
+      try {
+        const response = await fetch(`api_scores.php?action=download&file=${encodeURIComponent(filename)}`);
+        if (!response.ok) throw new Error('Bestand niet gevonden');
+        
+        let scoreData;
+        // Zorg dat we .mxl netjes inlezen als Buffer (nodig voor Zip in OSMD!)
+        if (filename.toLowerCase().endsWith('.mxl')) {
+            scoreData = await response.arrayBuffer();
+        } else {
+            scoreData = await response.text();
+        }
+        await renderScore(scoreData);
+      } catch (err) {
+        console.error('Error:', err);
+        emptyState.classList.remove('hidden');
+        loadingState.classList.add('hidden');
+        alert('Fout bij inladen: ' + err.message);
+      }
+    }
+
+    // ── File handling (Drag & Drop) ──
+    fileInput.addEventListener('change', async (e) => {
+      if (e.target.files.length) handleNewFileUpload(e.target.files[0]);
+    });
+    scoreArea.addEventListener('dragover', (e) => { e.preventDefault(); document.getElementById('drop-zone')?.classList.add('drag-over'); });
+    scoreArea.addEventListener('dragleave', (e) => { e.preventDefault(); document.getElementById('drop-zone')?.classList.remove('drag-over'); });
+    scoreArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      document.getElementById('drop-zone')?.classList.remove('drag-over');
+      if (e.dataTransfer.files[0]) handleNewFileUpload(e.dataTransfer.files[0]);
+    });
+
+    async function handleNewFileUpload(file) {
+      let title = prompt('Onder welke titel wil je dit opslaan op de server?', file.name.replace(/\.[^/.]+$/, ""));
+      if (!title) return;
+
+      const formData = new FormData();
+      formData.append('scoreFile', file);
+      formData.append('title', title);
+
+      emptyState.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+
+      try {
+        const response = await fetch('api_scores.php?action=upload', { method: 'POST', body: formData });
+        const data = await response.json();
+        if (data.success) {
+          fetchScores();
+          // Laad hem lokaal direct in
+          let scoreData;
+          if (file.name.toLowerCase().endsWith('.mxl')) scoreData = await file.arrayBuffer();
+          else scoreData = await file.text();
+          
+          document.getElementById('app-title').textContent = title;
+          await renderScore(scoreData);
+        } else {
+          alert('Upload fout: ' + data.error);
+          loadingState.classList.add('hidden');
+          emptyState.classList.remove('hidden'); 
+        }
+      } catch(err) {
+        alert('Upload failed: ' + err.message);
+        loadingState.classList.add('hidden');
+        emptyState.classList.remove('hidden'); 
+      }
+    }
+
+    // ── OSMD & Audio Rendering ──
+    async function renderScore(scoreData) {
+      osmdContainer.innerHTML = '';
+      
+      // Stop de oude speler compleet zodat stemmen niet overlappen
+      if (audioPlayer) {
+          audioPlayer.pause();
+          if(typeof audioPlayer.stop === 'function') audioPlayer.stop();
+      }
+
+      // Initialiseer OSMD
+      osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(osmdContainer, {
+        autoResize: true,
+        drawTitle: true,
+        drawSubtitle: true,
+        drawComposer: true,
+        drawPartNames: true,
+        drawingParameters: 'default',
+        backend: 'svg',
+        pageBackgroundColor: '#ffffff',
+        followCursor: true
+      });
+
+      // Laad het stuk in OSMD (verwerkt direct de Zip voor MXL)
+      await osmd.load(scoreData);
+
+      // Extract stemmen via OSMD in plaats van via tekst-XML parser (Werkt 100% voor MXL!)
+      voices =[];
+      if (osmd.sheet && osmd.sheet.Parts) {
+          osmd.sheet.Parts.forEach((part, idx) => {
+            const name = (part.NameLabel && part.NameLabel.text) ? part.NameLabel.text : (part.IdString || `Stem ${idx + 1}`);
+            voices.push({ name: name.trim(), partIndex: idx, color: voiceColors[idx % voiceColors.length] });
+          });
+      }
+      activeVoice = 'all';
+      renderVoiceNav();
+      applyVoiceFilter();
+      osmd.render();
+
+      // Fix zwarte inkt voor printkwaliteit look
+      const svg = osmdContainer.querySelector('svg');
+      if (svg) {
+        svg.style.backgroundColor = '#ffffff';
+        svg.querySelectorAll('text, path, line, circle, ellipse, rect').forEach(el => {
+          if (el.getAttribute('fill') && el.getAttribute('fill') !== 'none' && !el.classList.contains('measure-highlight')) el.setAttribute('fill', '#0f172a');
+          if (el.getAttribute('stroke') && el.getAttribute('stroke') !== 'none' && !el.classList.contains('measure-highlight')) el.setAttribute('stroke', '#0f172a');
+        });
+      }
+
+      if (osmd.cursor) {
+        osmd.cursor.show();
+      }
+
+      // Initialiseer Audio Player EENMALIG (Voorkomt de fast-forward doorspoel bug!)
+      if (!audioPlayerInitialized) {
+          audioPlayer = new OsmdAudioPlayer();
+          let lastMetronomeStep = -1;
+          
+          audioPlayer.on('iteration', () => {
+             if (osmd.cursor && !osmd.cursor.iterator.EndReached && isPlaying) {
+               osmd.cursor.next();
+             }
+             
+             // Simpele click deduplicatie
+             const currentStep = Math.floor(audioPlayer.currentIterationStep || 0);
+             if (metronomeEnabled && isPlaying && currentStep !== lastMetronomeStep) {
+               playMetronomeClick();
+               lastMetronomeStep = currentStep;
+             }
+             
+             updateProgressFromPlayer();
+          });
+          audioPlayerInitialized = true;
+      }
+
+      // Geef de nieuwe sheet aan de Tone.js engine
+      await audioPlayer.loadScore(osmd);
+      
+      loadingState.classList.add('hidden');
+      osmdContainer.classList.remove('hidden');
+      osmdContainer.classList.add('fade-up');
+    }
+
+    function renderVoiceNav() {
+      voiceList.innerHTML = '';
+      const allItem = createVoiceItem('all', 'Gehele koor samen', 'users');
+      voiceList.appendChild(allItem);
+
+      const iconMap = { 'sopraan': 'mic', 'soprano': 'mic', 'alt': 'mic-2', 'alto': 'mic-2', 'tenor': 'music-2', 'tenore': 'music-2', 'bas': 'music-3', 'bass': 'music-3', 'basso': 'music-3', 'piano': 'keyboard', 'orgel': 'keyboard' };
+
+      voices.forEach(v => {
+        const lower = v.name.toLowerCase();
+        let icon = 'music';
+        for (const [key, val] of Object.entries(iconMap)) {
+          if (lower.includes(key)) { icon = val; break; }
+        }
+        voiceList.appendChild(createVoiceItem(v.name, v.name, icon, v.color));
+      });
+
+      lucide.createIcons();
+      updateActiveVoice();
+    }
+
+    function createVoiceItem(id, label, icon, color) {
+      const btn = document.createElement('button');
+      btn.className = 'sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left mb-1 outline-none';
+      btn.dataset.voiceId = id;
+      
+      const colorDot = document.createElement('span');
+      colorDot.style.cssText = `width: 12px; height: 12px; border-radius: 50%; background: ${color || 'rgba(255,255,255,0.2)'}; flex-shrink: 0; box-shadow: 0 0 6px ${color || 'transparent'};`;
+      
+      const iconEl = document.createElement('i');
+      iconEl.setAttribute('data-lucide', icon);
+      iconEl.style.cssText = 'width: 16px; height: 16px; opacity: 0.7;';
+      
+      const labelEl = document.createElement('span');
+      labelEl.className = 'truncate';
+      labelEl.textContent = label;
+      
+      btn.appendChild(colorDot);
+      btn.appendChild(iconEl);
+      btn.appendChild(labelEl);
+      
+      btn.addEventListener('click', async () => {
+        activeVoice = id;
+        updateActiveVoice();
+        
+        if (osmd) {
+          const wasPlaying = isPlaying;
+          stopPlayback();
+          const currentStep = audioPlayer ? (audioPlayer.currentIterationStep || 0) : 0;
+          
+          applyVoiceFilter();
+          osmd.render(); // Visuele update
+          
+          if (osmd.cursor) {
+            osmd.cursor.reset();
+            osmd.cursor.show();
+            if (audioPlayer) {
+               // Reload nodig omdat de Tone.js tracks synchroon moeten lopen met zichtbare partijen
+               await audioPlayer.loadScore(osmd);
+               audioPlayer.jumpToStep(currentStep);
+            }
+            syncCursorToPlayer();
+            updateProgressFromPlayer();
+          }
+          if (wasPlaying) startPlayback();
+        }
+      });
+      return btn;
+    }
+
+    function updateActiveVoice() {
+      voiceList.querySelectorAll('.sidebar-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.voiceId === activeVoice);
+      });
+    }
+
+    function applyVoiceFilter() {
+      if (!osmd || !osmd.sheet) return;
+      osmd.sheet.Parts.forEach((part, idx) => {
+        const voiceInfo = voices[idx];
+        const isActive = (activeVoice === 'all') || (voiceInfo && voiceInfo.name === activeVoice);
+        part.visible = isActive;
+        
+        if (part.Voices) {
+          part.Voices.forEach(v => { v.Volume = isActive ? 1 : 0; });
+        }
+      });
+    }
+
+    // ── Playback ──
+    async function startPlayback() {
+      if (!osmd || !osmd.cursor || !audioPlayer) return;
+      
+      // Zorg dat Browser AudioContext wordt vrijgegeven (Belangrijk!)
+      if (window.Tone && window.Tone.context.state !== 'running') {
+          await window.Tone.start();
+      }
+
+      isPlaying = true;
+      updatePlayButton();
+      audioPlayer.playbackRate = playbackSpeed;
+      audioPlayer.play();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (audioPlayer) audioPlayer.pause();
+      updatePlayButton();
+    }
+
+    function updatePlayButton() {
+      const icon = btnPlay.querySelector('i');
+      if (icon) {
+        icon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
+        // Kleine design tweak voor play knop outline
+        btnPlay.style.transform = isPlaying ? 'scale(0.95)' : 'scale(1)';
+        lucide.createIcons();
+      }
+    }
+
+    function syncCursorToPlayer() {
+      if(!osmd || !osmd.cursor || !audioPlayer) return;
+      const targetStep = audioPlayer.currentIterationStep || 0;
+      osmd.cursor.reset();
+      for(let i=0; i < targetStep; i++) {
+        if (!osmd.cursor.iterator.EndReached) osmd.cursor.next();
+      }
+      osmd.cursor.update();
+      if (osmd.cursor.cursorElement) osmd.cursor.cursorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function updateProgressFromPlayer() {
+      if (!audioPlayer || !audioPlayer.iterationSteps) return;
+      const current = audioPlayer.currentIterationStep || 0;
+      const total = audioPlayer.iterationSteps || 1;
+      const pct = (current / total) * 100;
+      progressFill.style.width = `${pct}%`;
+      
+      const currentSec = Math.floor(current * 0.5 / playbackSpeed);
+      const totalSec = Math.floor(total * 0.5 / playbackSpeed);
+      timeCurrent.textContent = formatTime(currentSec);
+      timeTotal.textContent = formatTime(totalSec);
+      
+      highlightCurrentMeasure();
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    // ── Knoppen ──
+    btnPlay.addEventListener('click', () => {
+      if (!osmd) return;
+      if (isPlaying) stopPlayback();
+      else {
+        if (osmd.cursor.iterator.EndReached) {
+          osmd.cursor.reset();
+          osmd.cursor.show();
+          if (audioPlayer) audioPlayer.jumpToStep(0);
+        }
+        startPlayback();
+      }
+    });
+
+    btnRestart.addEventListener('click', () => {
+      if (!osmd || !osmd.cursor || !audioPlayer) return;
+      stopPlayback();
+      audioPlayer.jumpToStep(0);
+      syncCursorToPlayer();
+      osmd.cursor.show();
+      updateProgressFromPlayer();
+    });
+
+    btnRewind.addEventListener('click', () => {
+      if (!osmd || !osmd.cursor || !audioPlayer) return;
+      const wasPlaying = isPlaying;
+      stopPlayback();
+      const current = audioPlayer.currentIterationStep || 0;
+      audioPlayer.jumpToStep(Math.max(0, current - 15)); // Beetje grotere stap voor repeteren
+      syncCursorToPlayer();
+      updateProgressFromPlayer();
+      if (wasPlaying) startPlayback();
+    });
+
+    btnForward.addEventListener('click', () => {
+      if (!osmd || !osmd.cursor || !audioPlayer) return;
+      const wasPlaying = isPlaying;
+      stopPlayback();
+      const current = audioPlayer.currentIterationStep || 0;
+      const total = audioPlayer.iterationSteps || 0;
+      audioPlayer.jumpToStep(Math.min(total, current + 15));
+      syncCursorToPlayer();
+      updateProgressFromPlayer();
+      if (wasPlaying) startPlayback();
+    });
+
+    speedSlider.addEventListener('input', (e) => {
+      playbackSpeed = parseFloat(e.target.value);
+      speedLabel.textContent = `${playbackSpeed.toFixed(2)}×`;
+      if (audioPlayer) audioPlayer.playbackRate = playbackSpeed;
+    });
+
+    progressTrack.addEventListener('click', (e) => {
+      if (!osmd || !osmd.cursor || !audioPlayer || !audioPlayer.iterationSteps) return;
+      const rect = progressTrack.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const targetStep = Math.floor(pct * audioPlayer.iterationSteps);
+      
+      const wasPlaying = isPlaying;
+      stopPlayback();
+      audioPlayer.jumpToStep(targetStep);
+      syncCursorToPlayer();
+      updateProgressFromPlayer();
+      if (wasPlaying) startPlayback();
+    });
+
+    // ── Metronome ──
+    btnMetronome.addEventListener('click', () => {
+      metronomeEnabled = !metronomeEnabled;
+      metronomeLabel.textContent = metronomeEnabled ? 'AAN' : 'UIT';
+      btnMetronome.style.opacity = metronomeEnabled ? '1' : '0.5';
+    });
+
+    function playMetronomeClick() {
+      if (!audioContext) {
+        try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } 
+        catch (e) { return; }
+      }
+      if (audioContext.state === 'suspended') audioContext.resume();
+      
+      const now = audioContext.currentTime;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.frequency.value = 1000;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    }
+
+    // ── Exacte Maat Highlighting (Nieuwe Fix!) ──
+    function highlightCurrentMeasure() {
+      if (!osmdContainer || !osmd || !osmd.cursor || !osmd.cursor.iterator) return;
+      
+      // Ruim oude highlights op
+      osmdContainer.querySelectorAll('.measure-highlight').forEach(el => el.remove());
+      
+      const iterator = osmd.cursor.iterator;
+      const measureIndex = iterator.CurrentMeasureIndex ?? iterator.currentMeasureIndex;
+      if (measureIndex === undefined || measureIndex < 0) return;
+
+      try {
+        const measureList = osmd.graphic.measureList;
+        if (!measureList || !measureList[measureIndex]) return;
+
+        const staves = measureList[measureIndex];
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+        let found = false;
+
+        // Bepaal het omliggende kader van de huidige maat over alle notenbalken heen!
+        for (let i = 0; i < staves.length; i++) {
+          const staff = staves[i];
+          if (staff && staff.stave) {
+            found = true;
+            const x = staff.PositionAndShape.AbsolutePosition.x * 10;
+            const y = staff.PositionAndShape.AbsolutePosition.y * 10;
+            const w = staff.PositionAndShape.Size.width * 10;
+            const h = staff.PositionAndShape.Size.height * 10;
+
+            if (x < minX) minX = x;
+            if (x + w > maxX) maxX = x + w;
+            if (y < minY) minY = y;
+            if (y + h > maxY) maxY = y + h;
+          }
+        }
+
+        if (found) {
+          const svg = osmdContainer.querySelector('svg');
+          if (svg) {
+            // Teken een prachtige subtiele gouden achtergrond achter de maat
+            const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            highlight.setAttribute('class', 'measure-highlight');
+            highlight.setAttribute('x', minX - 8);
+            highlight.setAttribute('y', minY - 15);
+            highlight.setAttribute('width', maxX - minX + 16);
+            highlight.setAttribute('height', maxY - minY + 30);
+            highlight.setAttribute('fill', 'rgba(212, 175, 55, 0.12)'); // Goud-transparant
+            highlight.setAttribute('stroke', 'rgba(212, 175, 55, 0.3)');
+            highlight.setAttribute('stroke-width', '1');
+            highlight.setAttribute('rx', '6'); // Afgeronde hoekjes
+            highlight.setAttribute('pointer-events', 'none');
+
+            // Voeg hem toe helemaal onderaan de DOM (zodat hij achter de noten verschijnt!)
+            svg.insertBefore(highlight, svg.firstChild);
+          }
+        }
+      } catch(e) {
+        // Fallback stilzwijgend negeren als OSMD even niet meewerkt met berekeningen
+      }
+    }
+
+    // ── Init ──
+    lucide.createIcons();
+    fetchScores();
+  </script>
+ </body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <title>Monique botje</title>
+
+  <style>
+    :root {
+      --header-height: 64px;
+      --bg: #f7f7f7;
+      --text: #222;
+      --border: rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      font-family: Arial, sans-serif;
+      color: var(--text);
+    }
+
+    body {
+      padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      height: calc(var(--header-height) + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    main {
+      min-height: calc(100vh - var(--header-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px 16px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 58px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      .hint {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Monique botje</h1>
+  </header>
+
+  <main>
+    <div class="hint">De chat opent automatisch…</div>
+  </main>
+
+  <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/04/09/21/20260409211321-Z5XJV3IH.js" defer></script>
+
+  <script>
+    function tryOpenBotpress() {
+      try {
+        if (
+          window.botpressWebChat &&
+          typeof window.botpressWebChat.open === "function"
+        ) {
+          window.botpressWebChat.open();
+          return true;
+        }
+
+        if (window.botpress && typeof window.botpress.open === "function") {
+          window.botpress.open();
+          return true;
+        }
+
+        if (
+          window.botpress &&
+          window.botpress.webchat &&
+          typeof window.botpress.webchat.open === "function"
+        ) {
+          window.botpress.webchat.open();
+          return true;
+        }
+      } catch (e) {
+        console.warn("Botpress openen mislukt:", e);
+      }
+
+      return false;
+    }
+
+    function openWhenReady() {
+      let attempts = 0;
+      const maxAttempts = 60; // ongeveer 15 seconden
+
+      const timer = setInterval(() => {
+        attempts++;
+
+        const opened = tryOpenBotpress();
+
+        if (opened || attempts >= maxAttempts) {
+          clearInterval(timer);
+        }
+      }, 250);
+    }
+
+    window.addEventListener("load", () => {
+      setTimeout(openWhenReady, 400);
+    });
+  </script>
+</body>
+</html>

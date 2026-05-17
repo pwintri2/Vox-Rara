@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wintrip Promo Co-Pilot</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">wintrip-projects.nl</p>
+        <h1>Promo Co-Pilot</h1>
+      </div>
+      <div class="top-actions" aria-label="Campagne acties">
+        <button id="copyAllButton" type="button">Kopieer route</button>
+        <button id="exportButton" type="button">Exporteer plan</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="workspace">
+        <aside class="control-panel" aria-label="Campagne instellingen">
+          <div class="video-shell">
+            <video controls loop muted playsinline preload="metadata">
+              <source src="assets/wintrip-promo.mp4" type="video/mp4">
+            </video>
+            <div class="video-meta">
+              <span>12s verticale MP4</span>
+              <span>720 x 1280</span>
+            </div>
+          </div>
+
+          <form id="campaignForm" class="campaign-form">
+            <label>
+              Link
+              <input id="linkInput" name="link" type="url" value="https://wintrip-projects.nl" required>
+            </label>
+
+            <label>
+              Boektekst
+              <textarea id="hookInput" name="hook" rows="4">It is here!
+The soul journey of John May.
+Dive into the mystery of your soul and discover the karmic journey of John May in this spiritual romance trilogy.</textarea>
+            </label>
+
+            <label>
+              Doelgroep
+              <textarea id="audienceInput" name="audience" rows="3">readers of spiritual romance, soul journey stories, karmic love, mystery, and transformational fiction</textarea>
+            </label>
+
+            <div class="form-grid">
+              <label>
+                Toon
+                <select id="toneInput" name="tone">
+                  <option value="bold">Energiek</option>
+                  <option value="clean">Zakelijk helder</option>
+                  <option value="mystery">Mysterieus</option>
+                  <option value="community">Community-first</option>
+                </select>
+              </label>
+
+              <label>
+                Daglimiet
+                <input id="dailyLimitInput" name="dailyLimit" type="number" min="2" max="12" value="5">
+              </label>
+            </div>
+
+            <label>
+              Hashtags
+              <input id="hashtagsInput" name="hashtags" type="text" value="#SpiritualRomance #SoulJourney #KarmicLove #Ebook #JohnMay #WintripProjects">
+            </label>
+
+            <div class="button-row">
+              <button id="generateButton" type="submit">Ververs copy</button>
+              <button id="copyVideoPathButton" type="button">Kopieer video-pad</button>
+            </div>
+          </form>
+        </aside>
+
+        <section class="route-panel" aria-label="Sociale route">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">social tour</p>
+              <h2>Vandaag plaatsen</h2>
+            </div>
+            <div class="progress-box" aria-live="polite">
+              <strong id="progressText">0/0 klaar</strong>
+              <div class="progress-track">
+                <span id="progressBar"></span>
+              </div>
+            </div>
+          </div>
+
+          <div id="channelGrid" class="channel-grid"></div>
+        </section>
+      </section>
+
+      <section class="support-grid">
+        <article class="idea-board">
+          <div class="section-heading">
+            <p class="eyebrow">outside the box</p>
+            <h2>Promotiezetten</h2>
+          </div>
+          <div id="ideaGrid" class="idea-grid"></div>
+        </article>
+
+        <article class="poster-panel">
+          <div class="section-heading">
+            <p class="eyebrow">offline trigger</p>
+            <h2>Mini-poster</h2>
+          </div>
+          <div id="poster" class="poster">
+            <p class="poster-kicker">THE SOUL JOURNEY OF JOHN MAY</p>
+            <h3 id="posterHook">It is here!</h3>
+            <p id="posterSubtitle" class="poster-subtitle">A spiritual romance trilogy</p>
+            <img id="qrImage" alt="QR naar wintrip-projects.nl">
+            <p id="posterLink">wintrip-projects.nl</p>
+          </div>
+          <div class="button-row">
+            <button id="printPosterButton" type="button">Print poster</button>
+            <button id="copyPosterTextButton" type="button">Kopieer postertekst</button>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

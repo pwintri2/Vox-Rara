@@ -1,0 +1,16 @@
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+leden/db_config.php
+oefenen/scores_config.php
+
+# Runtime data, uploads, and local databases
+leden/data/
+oefenen/*.sqlite
+oefenen/*.sqlite-*
+
+# Logs and local OS/editor noise
+*.log
+.DS_Store
+Thumbs.db

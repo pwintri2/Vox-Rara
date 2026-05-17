@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoX Rara | Wintrip Projects</title>
+    <style>
+        :root {
+            --gold: #c4a127;
+            --gold-hover: #d6b02f;
+            --text-light: #ffffff;
+            --text-dim: #cccccc;
+            --bg-velvet: #1a0f2e; /* Soft deep purple/black velvet */
+            --radius-large: 32px;
+            --radius-medium: 24px;
+            --radius-small: 16px;
+        }
+
+        /* Essential Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-velvet);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* Velvet texture overlay effect */
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        /* Fixed Background Image with Softening */
+        .velvet-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            /* Using the original image as base, but intensely softened */
+            background-image: url('./vox-rara-wintrip-projects_files/designer-13-standard.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(0.4) contrast(1.1);
+            transform: scale(1.05); /* hide blurred edges */
+        }
+
+        /* Moving light orbs for dynamic feel */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+        .orb-1 {
+            width: 40vw;
+            height: 40vw;
+            background: rgba(138, 43, 226, 0.15); /* Purple */
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 35vw;
+            height: 35vw;
+            background: rgba(255, 105, 180, 0.1); /* Hot pinkish */
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
+        }
+
+        /* Top Navigation */
+        #custom-top-nav {
+            position: fixed;
+            top: 25px;
+            right: 40px;
+            z-index: 9999;
+            display: flex;
+            gap: 30px;
+            backdrop-filter: blur(12px);
+            background: rgba(20, 10, 30, 0.4);
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #custom-top-nav:hover {
+            background: rgba(30, 15, 45, 0.6);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #custom-top-nav a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-family: "Times New Roman", Times, serif;
+            font-size: 17px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        #custom-top-nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 50%;
+            background-color: var(--gold);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        #custom-top-nav a:hover {
+            color: var(--gold);
+        }
+
+        #custom-top-nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Logo */
+        .top-logo {
+            position: fixed;
+            top: 25px;
+            left: 40px;
+            z-index: 9999;
+            width: 80px;
+            height: auto;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+        }
+
+        .top-logo:hover {
+            transform: scale(1.05) translateY(-2px);
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 140px 5% 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 120px;
+        }
+
+        /* Sections */
+        .section-row {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            align-items: center;
+        }
+
+        @media(min-width: 900px) {
+            .section-row {
+                flex-direction: row;
+                gap: 80px;
+            }
+            .section-row > * {
+                flex: 1;
+                width: 50%;
+            }
+        }
+
+        .text-content {
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1, h2 {
+            font-family: "Times New Roman", Times, serif;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: var(--text-light);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        p {
+            font-family: "Inter", sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            font-weight: 300;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        strong {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Soft rounded media containers */
+        .media-container {
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(196, 161, 39, 0.05);
+            position: relative;
+            /* Subtle inner glow for velvet feel */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.2);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+            width: 100%;
+        }
+
+        .media-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.5), 0 0 50px rgba(196, 161, 39, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            width: 100%;
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        img.soft-img {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-large);
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 16/9;
+        }
+
+        img.square-img {
+            aspect-ratio: 1/1;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 16px;
+            margin-top: 24px;
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 24px;
+            border-radius: 50px; /* maximum rounded */
+            font-family: "Inter", sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, #a38217 100%);
+            color: #111;
+            border: none;
+            text-shadow: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--gold-hover) 0%, var(--gold) 100%);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(196, 161, 39, 0.3);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-light);
+            border: 1px solid rgba(196, 161, 39, 0.4);
+        }
+
+        .btn-outline:hover {
+            background: rgba(196, 161, 39, 0.1);
+            border-color: var(--gold);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        /* Audio Player Styling */
+        .audio-wrapper {
+            margin-top: 40px;
+            background: rgba(30, 15, 45, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px 24px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+        
+        .audio-wrapper:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
+            outline: none;
+            border-radius: 20px;
+        }
+        
+        /* Specific tweaks for webkit audio to fit dark theme */
+        audio::-webkit-media-controls-panel {
+            background-color: #f0f0f0;
+        }
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        @media (max-width: 768px) {
+            .top-logo {
+                top: 15px;
+                left: 15px;
+                width: 55px;
+            }
+            #custom-top-nav {
+                top: 15px;
+                right: 15px;
+                gap: 15px;
+                padding: 10px 16px;
+            }
+            #custom-top-nav a {
+                font-size: 14px;
+            }
+            .container {
+                gap: 80px;
+                padding-top: 100px;
+            }
+            .section-row {
+                gap: 40px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            /* Stack order for mobile so images/video appear nicely with text */
+            .section-row:nth-child(2) {
+                flex-direction: column-reverse;
+            }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 5, 15, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(25, 12, 38, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-large);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(196, 161, 39, 0.1);
+            transform: translateY(30px) scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 28px;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 5px;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+        }
+
+        .modal-title {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 1.8rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .modal-body p {
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+            line-height: 1.7;
+            color: var(--text-dim);
+            font-family: "Inter", sans-serif;
+            font-weight: 300;
+            max-width: 100%;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .modal-buttons .btn {
+            white-space: normal;
+            min-height: 52px;
+        }
+
+        @media(min-width: 768px) {
+            .modal-buttons {
+                flex-direction: row;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
+            .modal-buttons .btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Dynamic Velvet Background -->
+    <div class="velvet-background"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- Logo -->
+    <a href="https://www.wintrip-projects.nl/">
+        <img src="logo.png" alt="Wintrip Projects Logo" class="top-logo">
+    </a>
+
+    <!-- Navigation -->
+    <nav id="custom-top-nav">
+        <a href="https://philip-wintrip.nl/koorsite/index.html" target="_blank">Vocaal Collectief</a>
+        <a href="https://philip-wintrip.nl/leden/aanmelden.html" target="_blank">Aanmelden</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Section 1 -->
+        <section class="section-row">
+            <div class="text-content reveal">
+                <h1>Een klank die je niet maakt.<br>Maar draagt.</h1>
+                <p><strong>Voor sopranen, alten, tenoren en bassen die muzikaal zelfstandig zijn en zich willen verbinden aan een kleine bezetting.</strong></p>
+            </div>
+            
+            <div class="media-container reveal delay-2">
+                <div class="video-wrapper">
+                    <iframe src="https://player.vimeo.com/video/1171044729?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="section-row">
+            <div class="media-container reveal">
+                <div class="video-wrapper">
+                    <iframe src="https://player.vimeo.com/video/1171058096?title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <div class="media-container reveal delay-2">
+                <img src="./vox-rara-wintrip-projects_files/koor-standard.webp" alt="Koor" class="soft-img">
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="section-row">
+            <div class="media-container reveal">
+                <img src="./vox-rara-wintrip-projects_files/dirigent-standard.webp" alt="Dirigent" class="soft-img square-img">
+            </div>
+
+            <div class="text-content reveal delay-2">
+                <h2>Misschien is dit jouw ensemble.</h2>
+                <p><strong>Ben jij sopraan, alt, tenor of bas en verlang je naar muzikale gelijkwaardigheid?</strong></p>
+                
+                <div class="btn-group">
+                    <a href="javascript:void(0)" onclick="openModal()" class="btn btn-primary">Auditie aanvragen</a>
+                    <a href="javascript:void(0)" onclick="openModal()" class="btn btn-outline">Ik wil onderzoeken of ik hier hoor</a>
+                </div>
+
+                <div class="audio-wrapper reveal delay-3">
+                    <audio controls preload="none">
+                        <source src="https://www.wintrip-projects.nl/_downloads/b2acd8acdfa17251e4ce9065df7b2ccc" type="audio/mpeg">
+                        Je browser ondersteunt dit audio element niet.
+                    </audio>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="auditieModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3 class="modal-title">Wat kun je verwachten van de auditie?</h3>
+            <div class="modal-body">
+                <p>De auditie is kort en laagdrempelig. We zingen meestal in kleine SATB-groepjes, je zingt ook heel even solo, en we doen een korte solfège-/gehoortest. Zo kijken we of je klankkleur bij Vox Rara past, of je zuiver en zelfstandig in ensemble zingt, en of je snel nieuwe noten oppakt (we werken in projectvorm, soms met weinig repetitietijd).</p>
+                <p>Zenuwen zijn normaal: ik luister daar doorheen en help je rustig op weg.</p>
+            </div>
+            <div class="modal-buttons">
+                <a href="javascript:void(0)" onclick="closeModal()" class="btn btn-outline" style="border-color: rgba(255,255,255,0.2); color: #ccc;">Annuleren</a>
+                <a href="mailto:info@wintrip-projects.nl?subject=Bel%20mij%20even%20(Auditie)" class="btn btn-outline">Ik durf niet (bel me even)</a>
+                <a href="https://philip-wintrip.nl/leden/aanmelden.html" target="_blank" class="btn btn-primary" onclick="closeModal()">Doorgaan naar aanmelden</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Animations Script -->
+    <script>
+        // Modal functions
+        function openModal() {
+            document.getElementById('auditieModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('auditieModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('auditieModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Stop observing once animated in
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+            
+            // Trigger immediately for items already in view on load
+            setTimeout(() => {
+                reveals.forEach((reveal, idx) => {
+                    const rect = reveal.getBoundingClientRect();
+                    // If it's in the top part of the visible screen (add buffer for slow networks)
+                    if(rect.top < window.innerHeight - 50) {
+                        // Apply a slight cascading delay on initial load
+                        reveal.style.transitionDelay = `${idx * 0.1}s`;
+                        reveal.classList.add('active');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

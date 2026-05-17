@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Over de dirigent | Philip J. Wintrip</title>
+  <meta name="description" content="Over dirigent en componist Philip J. Wintrip: muzikale visie, vakkennis, opleiding en ervaring.">
+  <style>
+    :root {
+      --ink: #ffffff;
+      --muted: #d7d1c1;
+      --soft: rgba(255, 255, 255, 0.72);
+      --gold: #d4af37;
+      --gold-strong: #f0d36c;
+      --wine: #2a1020;
+      --green: #143a34;
+      --paper: rgba(15, 13, 12, 0.68);
+      --paper-strong: rgba(10, 9, 8, 0.84);
+      --line: rgba(255, 255, 255, 0.18);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.52);
+      --radius: 8px;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      background:
+        linear-gradient(135deg, rgba(7, 6, 6, 0.88), rgba(42, 16, 32, 0.62) 48%, rgba(20, 58, 52, 0.82)),
+        url("../vox-rara-wintrip-projects_files/designer-13-standard.png") center / cover fixed no-repeat,
+        #0b0908;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.62)),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 4px);
+      backdrop-filter: blur(7px);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /* Top Navigation */
+    #custom-top-nav {
+      position: fixed;
+      top: 25px;
+      right: 40px;
+      z-index: 9999;
+      display: flex;
+      gap: 30px;
+      backdrop-filter: blur(12px);
+      background: rgba(20, 10, 30, 0.4);
+      padding: 12px 24px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #custom-top-nav:hover {
+      background: rgba(30, 15, 45, 0.6);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    #custom-top-nav a {
+      text-decoration: none;
+      color: var(--ink);
+      font-family: "Times New Roman", Times, serif;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    #custom-top-nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -4px;
+      left: 50%;
+      background-color: var(--gold);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    #custom-top-nav a:hover,
+    #custom-top-nav a:focus {
+      color: var(--gold);
+      outline: none;
+    }
+
+    #custom-top-nav a:hover::after,
+    #custom-top-nav a:focus::after {
+      width: 100%;
+    }
+
+    .top-logo {
+      position: fixed;
+      top: 25px;
+      left: 40px;
+      z-index: 9999;
+      width: 80px;
+      height: auto;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+
+    .top-logo:hover,
+    .top-logo:focus {
+      transform: scale(1.05) translateY(-2px);
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+      outline: none;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 18px 6vw;
+      background: rgba(9, 8, 8, 0.58);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.42));
+    }
+
+    .brand span {
+      display: block;
+      color: var(--soft);
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+      color: var(--gold-strong);
+      border-color: var(--gold);
+      outline: none;
+    }
+
+    .hero {
+      min-height: 74vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.72fr);
+      align-items: center;
+      gap: 62px;
+      width: min(1180px, 88vw);
+      margin: 0 auto;
+      padding: 76px 0 58px;
+    }
+
+    .eyebrow {
+      color: var(--gold-strong);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      line-height: 1.12;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin-top: 18px;
+      font-size: 4.6rem;
+      text-shadow: 0 10px 34px rgba(0, 0, 0, 0.5);
+    }
+
+    .lead {
+      max-width: 760px;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 1.18rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 11px 18px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ink);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.25);
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(180deg, rgba(240, 211, 108, 0.96), rgba(188, 143, 38, 0.96));
+      color: #171109;
+      border-color: rgba(255, 241, 176, 0.62);
+    }
+
+    .button:hover,
+    .button:focus {
+      transform: translateY(-2px);
+      border-color: rgba(240, 211, 108, 0.74);
+      outline: none;
+    }
+
+    .portrait-shell {
+      position: relative;
+      align-self: stretch;
+      min-height: 420px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: var(--shadow);
+      background: var(--paper-strong);
+    }
+
+    .portrait-shell img {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      object-fit: cover;
+      filter: saturate(0.95) contrast(1.08);
+    }
+
+    .portrait-caption {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(16px);
+      font-size: 0.93rem;
+    }
+
+    .section {
+      padding: 74px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .section.dark {
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .wrap {
+      width: min(1180px, 88vw);
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.46fr) minmax(0, 1fr);
+      gap: 42px;
+      align-items: start;
+      margin-bottom: 38px;
+    }
+
+    .section-heading h2 {
+      color: var(--ink);
+      font-size: 2.5rem;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 1.04rem;
+      max-width: 780px;
+    }
+
+    .bio-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 32px;
+      align-items: stretch;
+    }
+
+    .glass,
+    .timeline-item,
+    .skill,
+    .education-item {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(22px);
+    }
+
+    .glass {
+      padding: 30px;
+    }
+
+    .glass p + p {
+      margin-top: 18px;
+    }
+
+    .quote {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 30px;
+      color: #f8ecd0;
+      background:
+        linear-gradient(180deg, rgba(42, 16, 32, 0.78), rgba(20, 58, 52, 0.64)),
+        rgba(0, 0, 0, 0.42);
+    }
+
+    .quote strong {
+      color: var(--gold-strong);
+      font-family: var(--serif);
+      font-size: 2.7rem;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .quote span {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .skill {
+      min-height: 118px;
+      padding: 20px;
+    }
+
+    .skill b {
+      display: block;
+      color: var(--gold-strong);
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+
+    .skill span {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .education-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .education-item {
+      padding: 22px;
+    }
+
+    .education-item time {
+      color: var(--gold-strong);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .education-item h3 {
+      margin-top: 10px;
+      color: var(--ink);
+      font-size: 1.42rem;
+    }
+
+    .education-item p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: 26px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--gold-strong), rgba(20, 58, 52, 0.9));
+    }
+
+    .timeline-item time {
+      color: var(--gold-strong);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .timeline-item h3 {
+      color: var(--ink);
+      font-size: 1.28rem;
+    }
+
+    .timeline-item p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .footer {
+      padding: 38px 0 52px;
+      color: rgba(255, 255, 255, 0.56);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .top-logo {
+        top: 15px;
+        left: 15px;
+        width: 55px;
+      }
+
+      #custom-top-nav {
+        top: 15px;
+        right: 15px;
+        gap: 15px;
+        padding: 10px 16px;
+      }
+
+      #custom-top-nav a {
+        font-size: 14px;
+      }
+
+      .site-header {
+        position: relative;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 18px 6vw;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+      }
+
+      .hero,
+      .section-heading,
+      .bio-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 112px;
+      }
+
+      h1 {
+        font-size: 3.2rem;
+      }
+
+      .portrait-shell,
+      .portrait-shell img {
+        min-height: 360px;
+      }
+
+      .skills-grid,
+      .education-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      body {
+        background-attachment: scroll;
+      }
+
+      #custom-top-nav {
+        left: 84px;
+        right: 12px;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 9px 10px;
+      }
+
+      #custom-top-nav a {
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+      }
+
+      .brand img {
+        width: 46px;
+        height: 46px;
+      }
+
+      .nav-links {
+        gap: 12px;
+        font-size: 0.9rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .lead {
+        font-size: 1.04rem;
+      }
+
+      .section {
+        padding: 54px 0;
+      }
+
+      .section-heading h2 {
+        font-size: 2rem;
+      }
+
+      .glass,
+      .quote,
+      .timeline-item,
+      .education-item,
+      .skill {
+        padding: 18px;
+      }
+
+      .skills-grid,
+      .education-grid,
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-item {
+        gap: 8px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        color: #111111;
+      }
+
+      body::before,
+      .site-header,
+      .hero-actions,
+      .portrait-shell,
+      .footer {
+        display: none;
+      }
+
+      .hero,
+      .wrap {
+        width: auto;
+        padding: 0;
+        margin: 0;
+      }
+
+      .hero,
+      .section-heading,
+      .bio-panel,
+      .skills-grid,
+      .education-grid,
+      .timeline-item {
+        display: block;
+      }
+
+      .section {
+        padding: 18px 0;
+        border-top: 1px solid #cccccc;
+      }
+
+      .glass,
+      .quote,
+      .skill,
+      .education-item,
+      .timeline-item {
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: 8px 0;
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      .lead,
+      .section-heading p,
+      .timeline-item p,
+      .education-item p,
+      .skill span,
+      .quote span {
+        color: #111111;
+        text-shadow: none;
+      }
+
+      .eyebrow,
+      .timeline-item time,
+      .education-item time,
+      .skill b,
+      .quote strong {
+        color: #6b4f00;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="../vox-rara-wintrip-projects.htm?skipIntro=1" aria-label="Terug naar Vox Rara">
+    <img src="../logo.png" alt="Wintrip Projects Logo" class="top-logo">
+  </a>
+
+  <nav id="custom-top-nav" aria-label="Hoofdnavigatie">
+    <a href="../vox-rara-wintrip-projects.htm?skipIntro=1">Welkom</a>
+    <a href="../cv/over-de-dirigent.html">Over de dirigent</a>
+    <a href="../vox-rara-wintrip-projects.htm?skipIntro=1">Aanmelden</a>
+  </nav>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <div class="eyebrow">Over de dirigent</div>
+        <h1 id="page-title">Philip J. Wintrip</h1>
+        <p class="lead">
+          Dirigent en componist met een sterke liefde voor koorklank, meerstemmigheid en het samenbrengen van mensen rond muziek. Zijn werk beweegt tussen klassieke koortraditie, eigen composities, Taizé, workshops en projecten waarin plezier en muzikaal resultaat elkaar versterken.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#ervaring">Bekijk ervaring</a>
+          <a class="button" href="javascript:window.print()">Print deze pagina</a>
+        </div>
+      </div>
+
+      <figure class="portrait-shell">
+        <img src="../vox-rara-wintrip-projects_files/dirigent-standard.webp" alt="Dirigent Philip Wintrip">
+        <figcaption class="portrait-caption">
+          Muzikale leiding met aandacht voor balans, zelfstandigheid en een gedragen ensembleklank.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="section dark" id="visie">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Muzikale visie</div>
+            <h2>Van losse stemmen naar gezamenlijke klank</h2>
+          </div>
+          <p>
+            Philip is een gedreven en creatieve dirigent en componist. Hij werkt graag met mensen en heeft de gave om ook onervaren zangers in relatief korte tijd naar meerstemmig zingen te brengen.
+          </p>
+        </div>
+
+        <div class="bio-panel">
+          <article class="glass">
+            <p>
+              In zijn werk zoekt hij naar een zo hoog mogelijke muzikale prestatie met de middelen die er zijn. Daarbij blijft plezier in de muziek altijd het uitgangspunt. Hij organiseerde meerdere uitvoeringen met eigen werk en dirigeerde uiteenlopende ensembles, waaronder buurtkoor Plateau in Utrecht Lunetten, accordeonvereniging SCALA in Maastricht en het Hasselbraamkoor in Eindhoven.
+            </p>
+            <p>
+              Naast repetities en concerten geeft hij graag workshops, bijvoorbeeld rond westerse mantra's of zingen in een meerstemmig koor. Eerder presenteerde hij op dinsdagavond het radioprogramma <em>Spiritualiteit en muziek</em> via Indigo Radio.
+            </p>
+          </article>
+
+          <aside class="glass quote" aria-label="Kern van de aanpak">
+            <strong>Klank, aandacht en plezier.</strong>
+            <span>Een dirigent die structuur geeft, mensen laat groeien en het ensemble als geheel laat ademen.</span>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Vakkennis</div>
+            <h2>Ambachtelijke basis</h2>
+          </div>
+          <p>
+            De muzikale praktijk rust op kennis van notenschrift, koordirectie en zang, gecombineerd met een brede technische achtergrond.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill">
+            <b>Notenschrift</b>
+            <span>Lezen, schrijven en vertalen van muziek naar heldere repetitiepraktijk.</span>
+          </div>
+          <div class="skill">
+            <b>Koordirectie</b>
+            <span>Repetitietechniek, balans, timing en ensemblevorming.</span>
+          </div>
+          <div class="skill">
+            <b>Zang</b>
+            <span>Aandacht voor stemgebruik, koorklank en muzikale frasering.</span>
+          </div>
+          <div class="skill">
+            <b>Informatietechnologie</b>
+            <span>Een praktische technische achtergrond naast het muzikale werk.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" id="opleiding">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Opleiding</div>
+            <h2>Muziek en techniek</h2>
+          </div>
+          <p>
+            De opleiding combineert muzikale scholing in Maastricht met een meerjarige dirigentenopleiding en een HBO-achtergrond in informatica.
+          </p>
+        </div>
+
+        <div class="education-grid">
+          <article class="education-item">
+            <time>1987</time>
+            <h3>Muziekschool Maastricht</h3>
+            <p>Notenschrift, zang en directie.</p>
+          </article>
+          <article class="education-item">
+            <time>2004-2006</time>
+            <h3>Unisono / Kunstfactor</h3>
+            <p>Meerjarige Dirigenten Opleiding.</p>
+          </article>
+          <article class="education-item">
+            <time>1 mei 1995</time>
+            <h3>Ster College Maastricht/Heerlen</h3>
+            <p>AMBI, HBO informatica.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ervaring">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">Ervaring</div>
+            <h2>Selectie uit koor- en projectwerk</h2>
+          </div>
+          <p>
+            Een overzicht van uitvoeringen, dirigentschappen, repetitorwerk, projecten en zangervaring uit de oorspronkelijke CV.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item">
+            <time>December 2017</time>
+            <div>
+              <h3>Vivaldi: Magnificat</h3>
+              <p>Uitvoering onder leiding van Rob Meijer.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>Oktober 2017</time>
+            <div>
+              <h3>Requiem van Rutter</h3>
+              <p>Koorschool Delft, onder leiding van John Rutter.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>September 2017</time>
+            <div>
+              <h3>Requiem Aeternam</h3>
+              <p>Werk van P. J. Wintrip, uitgevoerd in het Johannes Centrum Utrecht onder leiding van P. J. Wintrip.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>Maart 2016</time>
+            <div>
+              <h3>Bas, Johannes Passion 1725</h3>
+              <p>Uitvoering in de Ansfriduskerk in Amersfoort.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>September 2015-januari 2016</time>
+            <div>
+              <h3>2e dirigent CD-project Taizé-liederen in het Fries</h3>
+              <p>Project in Parraga, Friesland.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>Mei 2015-november 2015 en april 2016</time>
+            <div>
+              <h3>2e bas / repetitor, Blazhen Muzh koor</h3>
+              <p>Vespers van Rachmaninov in de Nassaukerk Amsterdam en Nieuwe Kerk Den Haag.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>Maart 2013</time>
+            <div>
+              <h3>Dirigent Taizé-weekend Leeuwarden</h3>
+              <p>Muzikale leiding tijdens een Taizé-weekend.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>15 februari 2012-1 november 2012</time>
+            <div>
+              <h3>Dirigent Hasselbraamkoor Eindhoven</h3>
+              <p>Leiding van de wekelijkse repetities en verzorging van concerten.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>1 november 2011-1 februari 2013</time>
+            <div>
+              <h3>Dirigent accordeonorkest SCALA Maastricht</h3>
+              <p>Leiding van wekelijkse repetities, muziekcommissie en concerten.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>1 november 2005-1 juni 2008</time>
+            <div>
+              <h3>Dirigent Plateau Utrecht</h3>
+              <p>Leiding van wekelijkse repetities, muziekcommissie en concerten voor het buurtkoor van Utrecht Lunetten.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>2006</time>
+            <div>
+              <h3>Toon Tellegen Project</h3>
+              <p>Gedichten van Toon Tellegen en Rutger Kopland op muziek voor koor, solisten en ensemble. Uitgevoerd in Parnassos Utrecht met medewerking van Plateau.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>2004</time>
+            <div>
+              <h3>Workshop westerse mantra's</h3>
+              <p>Workshop tijdens de Humanity's Team dag, met muzikale dagsluiting.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>1 september 2003-31 december 2004</time>
+            <div>
+              <h3>Dirigent Koor Moea Maarssen</h3>
+              <p>Leiding van wekelijkse repetities, muziekcommissie en dirigeren van de Heilige Mis.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>2003</time>
+            <div>
+              <h3>Rutger Kopland Project</h3>
+              <p>Gedichten van Rutger Kopland op muziek voor koor, solisten en ensemble, uitgevoerd in Cunera Utrecht.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>1994-2001</time>
+            <div>
+              <h3>Voorzanger Taizé-vespers Maastricht</h3>
+              <p>Voorzingen, leiden van Taizé-liederen en dirigeren van het Taizé-koor.</p>
+            </div>
+          </article>
+
+          <article class="timeline-item">
+            <time>1992-heden</time>
+            <div>
+              <h3>Koorzanger / solist</h3>
+              <p>Zanger en solist in verschillende koren, meestal klassiek en soms kerkelijk. Meest recent genoemd: Johannes Passion in Leiden met het Arnold Schönberg Kamerkoor.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Over de dirigent | Philip J. Wintrip</div>
+  </footer>
+</body>
+</html>
